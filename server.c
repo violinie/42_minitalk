@@ -1,24 +1,28 @@
-#include <signal.h>
-#include <unistd.h>
+#include <signal.h>    // for sigaction, siginfo_t, SA_SIGINFO
+#include <unistd.h>    // for write, pause, getpid
+#include <stdio.h>     // for printf, snprintf
 #include <sys/types.h>
-#include <stdio.h>
 
-void	handle_signal(int sig)
+void	handle_signal(int sig, siginfo_t *info, void *context)
 {
+	(void)info;
+	(void)context;
 	if (sig == SIGUSR1 || sig == SIGUSR2)
 		write(1, "This part is working\n", 22);
 }
 
 int	main(void)
 {
-	signal(SIGUSR1, handle_signal);
-	signal(SIGUSR2, handle_signal);
+	struct sigaction sa;
+
+	sa.sa_sigaction = handle_signal;
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 
 	pid_t pid = getpid();
-	write(1, "Server PID: ", 12);
-	char buffer[20];
-	int len = snprintf(buffer, 20, "%d\n", pid);
-	write(1, buffer, len);
+	printf("Server PID: %d\n", pid);
 
 	while (1)
 		pause();
