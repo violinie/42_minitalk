@@ -6,7 +6,7 @@
 /*   By: hanacop <hanacop@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:57:54 by hanacop           #+#    #+#             */
-/*   Updated: 2025/04/26 13:57:55 by hanacop          ###   ########.fr       */
+/*   Updated: 2025/04/26 14:58:12 by hanacop          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,18 @@ void	send_char(pid_t pid, unsigned char c)
 
 int	main(int argc, char **argv)
 {
-	if (argc != 3)
-		return (1);
-
 	pid_t pid = ft_atoi(argv[1]);
+
+	if (argc != 3)
+	{
+		write(2, "Error: Wrong number of arguments\n", 33);
+		return (1);
+	}
+	if (kill(pid, 0) == -1)
+	{
+		write(2, "Error: Invalid PID\n", 19);
+		return (1);
+	}
 	char *message = argv[2];
 	int i = 0;
 
