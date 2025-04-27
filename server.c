@@ -6,7 +6,7 @@
 /*   By: hanacop <hanacop@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:57:51 by hanacop           #+#    #+#             */
-/*   Updated: 2025/04/27 11:45:37 by hanacop          ###   ########.fr       */
+/*   Updated: 2025/04/27 11:59:54 by hanacop          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	handle_signal(int sig, siginfo_t *info, void *context)
 	bit_count++;
 	if (bit_count == 8)
 	{
-		buffer[buf_index++] = current_char;
+		if (buf_index < 9999)
+			buffer[buf_index++] = current_char;
 		if (current_char == '\0')
 		{
 			write(1, buffer, buf_index - 1);
